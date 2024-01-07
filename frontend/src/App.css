@@ -1,16 +1,7 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  display: flex;
+  height: 100vh; /* 100% de la hauteur de la vue */
+  
 }
 
 .App-header {
@@ -24,15 +15,16 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 200px; /* Largeur de la sidebar */
+  background-color: #f0f0f0; /* Couleur de fond de la sidebar */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main-content {
+  flex: 1; /* Prend tout l'espace disponible restant */
+  padding: 20px; /* Ajoutez un padding selon vos besoins */
+  overflow-y: auto; /* Ajoutez une barre de défilement si nécessaire */
 }

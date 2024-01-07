@@ -1,0 +1,13 @@
+.sidebar {
+    width: 20%;
+    min-width: 200px; /* Vous pouvez ajuster la valeur minimale selon vos besoins */
+    background-color: #f1f1f1;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+  }
