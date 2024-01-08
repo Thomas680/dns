@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BlacklistForm = () => {
+const BlacklistForm = ({ onMettreAJourElements }) => {
 
   const [mode, setMode] = useState('manuel'); 
   const [texteManuel, setTexteManuel] = useState('');
@@ -21,7 +21,7 @@ const BlacklistForm = () => {
 
   const envoieBlacklist = async (donnees) => {
     try {
-        console.log(donnees);
+        //console.log(donnees);
         const response = await fetch('http://localhost:3001/blacklist/add', {
           method: 'POST',
           headers: {
@@ -34,6 +34,7 @@ const BlacklistForm = () => {
           console.error('Erreur lors de la requête vers le backend:', response.statusText);
         
         }
+        onMettreAJourElements(JSON.stringify(donnees));
       } catch (erreur) {
         console.error('Erreur lors de la requête:', erreur.message);
       }
@@ -41,10 +42,10 @@ const BlacklistForm = () => {
 
   const validation = async () => {
     if (mode === 'manuel') {
-        console.log('Texte manuel:', texteManuel);
+        //console.log('Texte manuel:', texteManuel);
         await envoieBlacklist({ contenu: [texteManuel] });
       } else {
-        console.log('Fichier:', fichier);
+        //console.log('Fichier:', fichier);
   
         // Adaptation pour envoyer une liste depuis un fichier
         const reader = new FileReader();
@@ -56,9 +57,7 @@ const BlacklistForm = () => {
       }
   };
 
-  const handleTelechargementFichier = () => {
-    // Logique de téléchargement du fichier ici
-  };
+
 
   return (
     <div>
@@ -87,14 +86,12 @@ const BlacklistForm = () => {
             Texte Manuel:
             <input type="text" value={texteManuel} onChange={handleTexteManuelChange} />
           </label>
-          <button onClick={validation}>Valider</button>
         </div>
       )}
 
       {mode === 'fichier' && (
         <div>
           <input type="file" onChange={handleFichierChange} />
-          <button onClick={handleTelechargementFichier}>Télécharger Fichier</button>
         </div>
       )}
 

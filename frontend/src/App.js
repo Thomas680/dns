@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import Home from './pages/Home';
-import BlacklistPage from './pages/BlacklistPage';
 import AdministrationPage from './pages/AdministrationPage';
 import Sidebar from './components/Sidebar';
 import './App.css';
