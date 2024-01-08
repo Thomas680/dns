@@ -5,7 +5,7 @@ import ListeAvecSuppression from '../components/Blacklist';
 
 
 const AdministrationPage = () => {
-  
+  /*
   const [elements, setElements] = useState(() =>{
     const fetchData = async () => {
       try {
@@ -20,7 +20,7 @@ const AdministrationPage = () => {
     // lancement de le récupération des data dès que le composant est monté (init)
     fetchData();
   });
-
+*/
   // pour que les data soient init dès le départ 
   /*
   useEffect(() => {
@@ -42,18 +42,19 @@ const AdministrationPage = () => {
 
 */
 
-
+/*
   const mettreAJourElements = (nouveauxElements) => {
     setElements(nouveauxElements);
     
   };
-
+*/
+  // <ListeAvecSuppression elements={elements}/>
 
   return (
     <div>
       <h1>Page admin</h1>
-      <BlacklistForm onMettreAJourElements={mettreAJourElements}/>
-      <ListeAvecSuppression elements={elements}/>
+      <BlacklistForm/>
+      
     </div>
   );
 };

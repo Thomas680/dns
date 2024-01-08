@@ -34,7 +34,6 @@ const BlacklistForm = ({ onMettreAJourElements }) => {
           console.error('Erreur lors de la requête vers le backend:', response.statusText);
         
         }
-        onMettreAJourElements(JSON.stringify(donnees));
       } catch (erreur) {
         console.error('Erreur lors de la requête:', erreur.message);
       }

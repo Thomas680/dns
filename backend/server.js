@@ -60,6 +60,22 @@ app.get('/', (req, res) => {
 });
 
 
+app.get('/etat', (req,res) => {
+  const isActiveCmd = 'systemctl is-active bind9';
+
+  exec(isActiveCmd, (error, stdout, stderr) => {
+    if (error) {
+        console.error(`Erreur lors de la cmd systemctl : ${stderr}`);
+        res.status(500).send('Erreur lors de l\'exécution de la commande sysctl');
+        return;
+    }
+
+    const statusB = stdout.trim();
+    res.status(200).json({ status: statusB });
+  });
+});
+
+
 // route pour lancer le serveur bind (écoute)
 app.post('/start-server', (req, res) => {
   
@@ -126,9 +142,9 @@ app.get('/blacklist/', (req, res) => {
             //console.log('Noms de zones :', nomsDeZones);
         
             const jsonResultat = { nomsDeZones };
-            console.log('Le JSON :', JSON.stringify(jsonResultat, null, 2));
+            //console.log('Le JSON :', JSON.stringify(jsonResultat, null, 2));
         
-            return res.json(jsonResultat);
+            res.json(jsonResultat);
           });
         }
             
@@ -136,11 +152,11 @@ app.get('/blacklist/', (req, res) => {
 })
 
 
-
 // Route qui permet d'ajouter des blacklists
 app.post('/blacklist/add', (req, res) => {
   
   const { contenu } = req.body;
+  console.log(contenu);
 
   if (!contenu || !Array.isArray(contenu)) {
     return res.status(400).send('Pas de contenu ou input invalide');
@@ -151,16 +167,18 @@ app.post('/blacklist/add', (req, res) => {
 
   contenu.forEach((item) => {
 
-    const checkCmd = `grep ${contenu} /etc/bind/*.local`;
+    console.log(`grep ${item} /etc/bind/named.conf.local`);
+    const checkCmd = `grep ${item} /etc/bind/*.local`;
+    //const checkCmd = `grep ${item} /etc/bind/named.conf.local`;
 
     exec(checkCmd, (error, stdout, stderr) => {
 
       if (error) {
-        console.error(`Erreur lors : ${error.message}`);
+        console.error(`Erreur lors du grep : ${error.message}`);
       }
-
+      
       // la blacklist n'existe pas dans la liste
-      if(stderr)
+      if(!stdout)
       {
         const c = `zone "${item}" {\n    type master;\n    file "/etc/bind/db.blocked";\n};\n\n`;
    
@@ -171,12 +189,15 @@ app.post('/blacklist/add', (req, res) => {
               exec(cmd, (error, stdout, stderr) => {
     
                 if (error) {
-                  console.error(`Erreur lors : ${error.message}`);
+                  console.error(`Erreur lors du restart de bind9: ${error.message}`);
                 }
               });
           }
         }); 
+      }else{
+        console.log("Cette zone existe déjà");
       }
+      
     });
   });
 
@@ -187,7 +208,7 @@ app.post('/blacklist/add', (req, res) => {
 // Route qui permet de supprimer une blacklist
 app.post('/blacklist/delete', (req, res) => {
 
-  let contenu = "twitch.tv";
+  const { contenu } = req.body;
 
   let nombre = `grep -n ${contenu} /etc/bind/*.local` ;
   const chemin = '/etc/bind/named.conf.local';
@@ -230,7 +251,21 @@ app.post('/blacklist/delete', (req, res) => {
 });
 
 
+// STATS 
 
+app.get('/stats', (req,res) => {
+  const statCmd = 'sudo rndc -s 127.0.0.1 -p 8053 stats';
+
+  exec(statCmd, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Erreur lors de la recherche du fichier de config: ${error.message}`);
+      return res.status(500).send('lors de la recherche du fichier de config');
+    }
+
+
+
+  });
+});
 
 
 
@@ -239,7 +274,7 @@ app.post('/blacklist/delete', (req, res) => {
 // WHITELIST
 app.get('/whitelist/', (req, res) => {
 
-})
+});
 
 app.post('/whitelist/add', (req, res) => {
  

@@ -1,5 +1,5 @@
 // Home.js
-import React from 'react';
+import React, {useEffect} from 'react';
 import Sidebar from '../components/Sidebar';
 import Button from '../components/Button';
 import BarChart from '../components/BarChart';
@@ -7,6 +7,24 @@ import Card from '../components/Card';
 import FixedList from '../components/Fixedlist';
 
 const Home = () => {
+
+/*
+  useEffect(() => {
+
+    // Fonction pour récupérer les données depuis l'API
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/blacklist/');
+        const data = await response.json();
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données depuis l\'API:', error);
+      }
+    };
+
+    // lancement de le récupération des data dès que le composant est monté (init)
+    fetchData();
+  }, []); 
+*/
 
 
   return (
@@ -19,6 +37,7 @@ const Home = () => {
             imageUrl="https://example.com/image1.jpg"
           />
       </div>
+
       
       <div>
 

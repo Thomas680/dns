@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import Home from './pages/Home';
+import BlacklistPage from './pages/Blacklist';
 import AdministrationPage from './pages/AdministrationPage';
 import Sidebar from './components/Sidebar';
 import './App.css';
@@ -18,6 +19,7 @@ const App = () => {
       <div className="main-content" >
         {currentPage === 'home' && <Home />}
         {currentPage === 'administration' && <AdministrationPage />}
+        {currentPage === 'blacklist' && <BlacklistPage />}
       </div>
     </div>
   );
