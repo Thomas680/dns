@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Home from './pages/Home';
 import BlacklistPage from './pages/BlacklistPage';
-import WhitelistPage from './pages/WhitelistPage';
+import AdministrationPage from './pages/AdministrationPage';
 import Sidebar from './components/Sidebar';
 import './App.css';
 
@@ -18,8 +18,7 @@ const App = () => {
       <Sidebar className="sidebar" onTabChange={handleTabChange} />
       <div className="main-content" >
         {currentPage === 'home' && <Home />}
-        {currentPage === 'blacklist' && <BlacklistPage />}
-        {currentPage === 'whitelist' && <WhitelistPage />}
+        {currentPage === 'administration' && <AdministrationPage />}
       </div>
     </div>
   );

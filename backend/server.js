@@ -1,21 +1,60 @@
 
-
 const express = require('express');
 
 const { exec } = require('child_process');
+
+const cors = require('cors');
 
 const fs = require('fs');
 
 const app = express();
 
+app.use(express.json());
+
+app.use(cors());
+
 const PORT =  3001; 
 
 
 app.get('/', (req, res) => {
-  // res.send('hello hello');
-  const a = 'sudo find db.blockedsites';
+  const findCmd = 'sudo find /etc -name db.blockedsites';
+  const lien = '/etc/bind/db.blockedsites';
 
-///////////////////////////////////////////////////////////
+  exec(findCmd, (error, stdout, stderr) => {
+
+    if (error) {
+      console.error(`Erreur lors de de la recherche du fichier db.blockedsites : ${error.message}`);
+    }
+
+    const contenuFichier = 
+    `$TTL 86400\n@       IN      SOA     localhost. root.localhost. (
+      \n                      1       ; Serial
+      \n                      604800  ; Refresh
+      \n                      86400   ; Retry
+      \n                      2419200 ; Expire
+      \n                      86400 ) ; Negative Cache TTL
+    
+      \n      IN      NS      localhost.
+    
+    \n@      IN      A       127.0.0.1`;
+
+    fs.writeFile(lien, contenuFichier, (erreur) => {
+      if (erreur) {
+        console.error(`Erreur lors de l'écriture dans le fichier ds.blockedsites : `, erreur);
+      } else {
+
+        const restartCmd = 'sudo service bind9 restart';
+        exec(restartCmd, (error, stdout, stderr) => {
+
+          if (error) {
+            console.error(`Erreur lors du restart de bind : ${error.message}`);
+          }
+
+          res.send("fichier de config db.blockedsites ").status(200);
+        });
+      }
+    });  
+  });
 
 });
 
@@ -55,7 +94,7 @@ app.post('/stop-server', (req, res) => {
 
 // BLACKLIST
 app.get('/blacklist/', (req, res) => {
-    const cmd = 'sudo find /etc -name named.conf';
+    const cmd = 'sudo find /etc -name named.conf.local';
 
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
@@ -64,49 +103,88 @@ app.get('/blacklist/', (req, res) => {
         }
     
         console.log(`recherche du fichier de config ok`);
-        res.send('recherche du fichier de config ok');
+
+        const lien = '/etc/bind/named.conf.local';
+
+        fs.readFile(lien, 'utf-8', (erreur, contenu) => {
+          if (erreur) {
+              console.error('Erreur lors de la lecture du fichier :', erreur);
+              return;
+          }
+      
+          const chercherzone = /zone\s+"([^"]+)"/g;
+          const nomsDeZones = [];
+          let match;
+      
+          while ((match = chercherzone.exec(contenu)) !== null) {
+              nomsDeZones.push(match[1]);
+          }
+      
+          // Afficher les noms de zones.
+          console.log('Noms de zones :', nomsDeZones);
+      
+          // Convertir les noms de zones en objet JSON si nécessaire.
+          const jsonResultat = { nomsDeZones };
+
+          res.json(jsonResultat).send('BLACKLIST LISTING OK');
+      
+          // Afficher l'objet JSON résultant.
+          console.log('Résultat en JSON :', JSON.stringify(jsonResultat, null, 2));
+      });
+
+        
       });
 })
 
-app.post('/blacklist/add', (req, res) => {
 
-  //const { contenu } = req.body;
+
+
+app.post('/blacklist/add', (req, res) => {
+  console.log(req.body);
+  const { contenu } = req.body;
+
+  if (!contenu || !Array.isArray(contenu)) {
+    return res.status(400).send('Pas de contenu ou input invalide');
+  }
   
   const lien = '/etc/bind/named.conf.local';
    
   const cmd = 'sudo service bind9 restart';
 
-  let contenu = "twitch.tv";
+  //let contenu = "twitch.tv";
 
-  let c = `zone "${contenu}" {\ntype master;\nfile "/etc/bind/db.blocked";\n};`
+  contenu.forEach((item) => {
 
-  const check = `grep ${contenu} /etc/bind/*.local`;
-  exec(check, (error, stdout, stderr) => {
+    const check = `grep ${contenu} /etc/bind/*.local`;
 
-    if (error) {
-      console.error(`Erreur lors : ${error.message}`);
+    exec(check, (error, stdout, stderr) => {
+
+      if (error) {
+        // console.error(`Erreur lors : ${error.message}`);
+        
+        const c = `zone "${item}" {\ntype master;\nfile "/etc/bind/db.blocked";\n};`;
+   
+        fs.appendFile(lien, c, (erreur) => {
+          if (erreur) {
+            console.error('Erreur lors du write :', erreur);
+          } else {
+            console.log('Write des blacklist ok');
+  
+            exec(cmd, (error, stdout, stderr) => {
+  
+              if (error) {
+                console.error(`Erreur lors : ${error.message}`);
+              }
+            });
+          }
+        });      
+        
+      }
       
-      fs.appendFile(lien, c, (erreur) => {
-        if (erreur) {
-          console.error('Erreur lors du write :', erreur);
-        } else {
-          console.log('Write des blacklist ok');
-
-          exec(cmd, (error, stdout, stderr) => {
-
-            if (error) {
-              console.error(`Erreur lors : ${error.message}`);
-            }
-          });
-        }
-      });      
-      
-    }
-    
-    // il en exite déjà un 
-    console.log(`res : ${stdout}`);
+      // il existe déjà dans la blacklist
+      console.log(`res : ${stdout}`);
+    });
   });
-
 
   res.send("tout est ok").status(200);
 });
@@ -172,9 +250,7 @@ app.get('/whitelist/', (req, res) => {
 })
 
 app.post('/whitelist/add', (req, res) => {
-  const { element } = req.body;
-  // ajouter à la blacklist 
-  res.status(200).json({ message: 'Élément ajouté avec succès à la liste noire.' });
+ 
 });
 
 app.get('/whitelist/delete', (req, res) => {
