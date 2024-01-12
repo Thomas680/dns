@@ -180,7 +180,7 @@ app.post('/blacklist/add', (req, res) => {
       // la blacklist n'existe pas dans la liste
       if(!stdout)
       {
-        const c = `zone "${item}" {\n    type master;\n    file "/etc/bind/db.blocked";\n};\n\n`;
+        const c = `zone "${item}" {\n    type master;\n    file "/etc/bind/db.blockedsites";\n};\n\n`;
    
         fs.appendFile(chemin, c, (erreur) => {
           if (erreur) {
