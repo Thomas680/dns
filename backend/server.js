@@ -210,43 +210,48 @@ app.post('/blacklist/delete', (req, res) => {
 
   const { contenu } = req.body;
 
-  let nombre = `grep -n ${contenu} /etc/bind/*.local` ;
+  let cmdGetLigne = `grep -n ${contenu} /etc/bind/*.local` ;
+  let resultCmdGetLigne = execSync(cmdGetLigne, {encoding: "utf8"}).trimEnd();
+  console.log(resultCmdGetLigne);
+
+  const numeroLigne = resultCmdGetLigne.split(':')[1];
+
   const chemin = '/etc/bind/named.conf.local';
 
-  exec(nombre, (error, stdout, stderr) => {
+  // exec(nombre, (error, stdout, stderr) => {
 
-    if (error) {
-      console.error(`Erreur lors : ${error.message}`);
-    }
+  //   if (error) {
+  //     console.error(`Erreur lors : ${error.message}`);
+  //   }
     
-    const splitString = stdout.split(':');
-    const numeroLigne = splitString[1];
-    console.log(numeroLigne);
+  //   const splitString = stdout.split(':');
+  //   const numeroLigne = splitString[1];
+  //   console.log(numeroLigne);
 
-    const numFin = parseInt(numeroLigne) +3;
+  //   const numFin = parseInt(numeroLigne) +3;
 
-    const deleteb = `sed '${numeroLigne},${numFin}d' /etc/bind/named.conf.local`;
+  //   const deleteb = `sed '${numeroLigne},${numFin}d' /etc/bind/named.conf.local`;
     
-    exec(deleteb, (error, stdout, stderr) => {
+  //   exec(deleteb, (error, stdout, stderr) => {
 
-      if (error) {
-        console.error(`Erreur lors : ${error.message}`);
-      }
+  //     if (error) {
+  //       console.error(`Erreur lors : ${error.message}`);
+  //     }
 
-      fs.writeFile(chemin, stdout, (erreur) => {
-        if (erreur) {
-          console.error('Erreur lors du write :', erreur);
-        } else {
-          const restartBindCmd = 'sudo service bind9 restart';
-          exec(restartBindCmd, (error, stdout, stderr) => {
-            if (error) {
-              console.error(`Erreur lors : ${error.message}`);
-            }
-          });
-        }
-      });  
-    });
-  });
+  //     fs.writeFile(chemin, stdout, (erreur) => {
+  //       if (erreur) {
+  //         console.error('Erreur lors du write :', erreur);
+  //       } else {
+  //         const restartBindCmd = 'sudo service bind9 restart';
+  //         exec(restartBindCmd, (error, stdout, stderr) => {
+  //           if (error) {
+  //             console.error(`Erreur lors : ${error.message}`);
+  //           }
+  //         });
+  //       }
+  //     });  
+  //   });
+  // });
 
 });
 
