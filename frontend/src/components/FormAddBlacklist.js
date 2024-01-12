@@ -36,7 +36,7 @@ const BlacklistForm = (props) => {
           console.error('Erreur lors de la requête vers le backend:', response.statusText);
         
         } else {
-          let monTableau = props.elements.concat([donnees.contenu]);
+          let monTableau = props.elements.concat(donnees.contenu);
           props.setElements(monTableau);
         }
       } catch (erreur) {
