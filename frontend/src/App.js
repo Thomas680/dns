@@ -19,7 +19,6 @@ const App = () => {
       <div className="main-content" >
         {currentPage === 'home' && <Home />}
         {currentPage === 'administration' && <AdministrationPage />}
-        {currentPage === 'blacklist' && <BlacklistPage />}
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ const Home = () => {
         <Card
             title="Card 1"
             description="Description de la carte 1."
-            imageUrl="https://example.com/image1.jpg"
+            // imageUrl="https://example.com/image1.jpg"
           />
       </div>
 
