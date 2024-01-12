@@ -221,7 +221,7 @@ app.post('/blacklist/delete', (req, res) => {
     const numFin = parseInt(numLigne) +3;
     console.log("Numéro de ligne de fin : " + numFin);
 
-    const cmdDelete = `sed '${numeroLigne},${numFin}d' /etc/bind/named.conf.local`;
+    const cmdDelete = `sed '${numLigne},${numFin}d' /etc/bind/named.conf.local`;
     let resultCmdDelete = execSync(cmdDelete, {encoding: "utf8"}).trimEnd();
     console.log("Resultat delete : ");
     console.log(resultCmdDelete);
