@@ -229,7 +229,7 @@ app.post('/blacklist/delete', (req, res) => {
     const chemin = '/etc/bind/named.conf.local';
 
     fs.writeFile(chemin, resultCmdDelete, (erreur) => {
-console.log("Write file");
+      console.log("Write file");
       if (erreur) {
         console.error('Erreur lors du write :', erreur);
       } else {
@@ -242,43 +242,10 @@ console.log("Write file");
   } 
   catch(error)
   {
-console.log(error);
+    console.log(error);
+    res.send().status(500);
   }
-  // exec(nombre, (error, stdout, stderr) => {
-
-  //   if (error) {
-  //     console.error(`Erreur lors : ${error.message}`);
-  //   }
-    
-  //   const splitString = stdout.split(':');
-  //   const numeroLigne = splitString[1];
-  //   console.log(numeroLigne);
-
-  //   const numFin = parseInt(numeroLigne) +3;
-
-  //   const deleteb = `sed '${numeroLigne},${numFin}d' /etc/bind/named.conf.local`;
-    
-  //   exec(deleteb, (error, stdout, stderr) => {
-
-  //     if (error) {
-  //       console.error(`Erreur lors : ${error.message}`);
-  //     }
-
-  //     fs.writeFile(chemin, stdout, (erreur) => {
-  //       if (erreur) {
-  //         console.error('Erreur lors du write :', erreur);
-  //       } else {
-  //         const restartBindCmd = 'sudo service bind9 restart';
-  //         exec(restartBindCmd, (error, stdout, stderr) => {
-  //           if (error) {
-  //             console.error(`Erreur lors : ${error.message}`);
-  //           }
-  //         });
-  //       }
-  //     });  
-  //   });
-  // });
-
+  res.send().status(200);
 });
 
 
