@@ -164,45 +164,70 @@ app.post('/blacklist/add', (req, res) => {
   }
   
   const chemin = '/etc/bind/named.conf.local';
-  const cmd = 'sudo service bind9 restart';
 
-  contenu.forEach((item) => {
+  try {
+    contenu.forEach((item) => {
 
-    console.log(`grep ${item} /etc/bind/named.conf.local`);
-    const checkCmd = `grep ${item} /etc/bind/*.local`;
-    //const checkCmd = `grep ${item} /etc/bind/named.conf.local`;
+      console.log(`grep ${item} /etc/bind/named.conf.local`);
+      const checkCmd = `grep ${item} /etc/bind/*.local`;
+      //const checkCmd = `grep ${item} /etc/bind/named.conf.local`;
 
-    exec(checkCmd, (error, stdout, stderr) => {
+      let resultCheckCmd = execSync(checkCmd, {encoding: "utf8"}).trimEnd();
+      console.log("Result check cmd : " + resultCheckCmd);
 
-      if (error) {
-        console.error(`Erreur lors du grep : ${error.message}`);
-      }
-      
-      // la blacklist n'existe pas dans la liste
-      if(!stdout)
+      if(!resultCheckCmd)
       {
-        const c = `\nzone "${item}" {\n    type master;\n    file "/etc/bind/db.blockedsites";\n};\n`;
-   
-        fs.appendFile(chemin, c, (erreur) => {
+        const contentToWrite = `\nzone "${item}" {\n    type master;\n    file "/etc/bind/db.blockedsites";\n};\n`;
+        fs.appendFile(chemin, contentToWrite, (erreur) => {
+          console.log("Writing file");
           if (erreur) {
             console.error('Erreur lors du write :', erreur);
           } else {
-              exec(cmd, (error, stdout, stderr) => {
-    
-                if (error) {
-                  console.error(`Erreur lors du restart de bind9: ${error.message}`);
-                }
-              });
+            console.log("Writing OK");
+            const restartBindCmd = 'sudo service bind9 restart';
+            let resultRestartBindCmd = execSync(restartBindCmd, {encoding: "utf8"}).trimEnd();
+            console.log("Bind restarted");
           }
         }); 
-      }else{
-        console.log("Cette zone existe déjà");
       }
-      
-    });
-  });
 
-  res.send("tout est ok").status(200);
+      // exec(checkCmd, (error, stdout, stderr) => {
+
+      //   if (error) {
+      //     console.error(`Erreur lors du grep : ${error.message}`);
+      //   }
+        
+      //   // la blacklist n'existe pas dans la liste
+      //   if(!stdout)
+      //   {
+      //     const c = `\nzone "${item}" {\n    type master;\n    file "/etc/bind/db.blockedsites";\n};\n`;
+    
+      //     fs.appendFile(chemin, c, (erreur) => {
+      //       if (erreur) {
+      //         console.error('Erreur lors du write :', erreur);
+      //       } else {
+      //           exec(cmd, (error, stdout, stderr) => {
+      
+      //             if (error) {
+      //               console.error(`Erreur lors du restart de bind9: ${error.message}`);
+      //             }
+      //           });
+      //       }
+      //     }); 
+      //   }else{
+      //     console.log("Cette zone existe déjà");
+      //   }
+        
+      // });
+    });
+  }
+  catch(error)
+  {
+    console.log(error);
+    res.send().status(500);
+  }
+  
+  res.send().status(200);
 });
 
 
