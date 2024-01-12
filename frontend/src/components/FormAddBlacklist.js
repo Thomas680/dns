@@ -54,7 +54,7 @@ const BlacklistForm = (props) => {
         // Adaptation pour envoyer une liste depuis un fichier
         const reader = new FileReader();
         reader.onload = async (e) => {
-          const contenuFichier = e.target.result.split('\n').filter(Boolean);
+          const contenuFichier = e.target.result.split('\n').map((monSite) => monSite.trim());
           await envoieBlacklist({ contenu: contenuFichier });
         };
         reader.readAsText(fichier);
