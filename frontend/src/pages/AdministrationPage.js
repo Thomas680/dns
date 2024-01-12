@@ -51,11 +51,13 @@ const AdministrationPage = () => {
 */
   // <ListeAvecSuppression elements={elements}/>
 
+  const [elements, setElements] = useState([]);
+
   return (
     <div>
       <h1>Page admin</h1>
       <BlacklistForm/>
-      
+      <ListeAvecSuppression elements={elements} setElements={setElements}/>
     </div>
   );
 };

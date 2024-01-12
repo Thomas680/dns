@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 const IP_SERVER = "http://192.168.1.2:3001";
 
-const ListeAvecSuppression = () => {
-  const [elements, setElements] = useState([]);
+const ListeAvecSuppression = (props) => {
+  // const [elements, setElements] = useState([]);
 
   // se lance une fois, dès que le composant se monteeeeeeeeee
   useEffect(() => {
@@ -12,7 +12,7 @@ const ListeAvecSuppression = () => {
       try {
         const response = await fetch(IP_SERVER + '/blacklist/');
         const data = await response.json();
-        setElements(data.nomsDeZones); 
+        props.setElements(data.nomsDeZones); 
       } catch (error) {
         console.error('Erreur lors de la récupération des données depuis l\'API:', error);
       }
@@ -37,8 +37,8 @@ const ListeAvecSuppression = () => {
         return;
       }
   
-      const nouveauxElements = elements.filter((e) => e !== element);
-      setElements(nouveauxElements);
+      const nouveauxElements = props.elements.filter((e) => e !== element);
+      props.setElements(nouveauxElements);
     } catch (erreur) {
       console.error('Erreur lors de la requête:', erreur.message);
     }
@@ -49,11 +49,11 @@ const ListeAvecSuppression = () => {
       <h2>Liste des blacklists</h2>
       <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px' }}>
         <ul style={{ listStyle: 'none', padding: 0 }}>
-          {elements.map((element, index) => (
+          {props.elements.map((element, index) => (
             <li
               key={index}
               style={{
-                borderBottom: index < elements.length - 1 ? '1px solid #ccc' : 'none',
+                borderBottom: index < props.elements.length - 1 ? '1px solid #ccc' : 'none',
                 padding: '10px',
                 display: 'flex',
                 justifyContent: 'space-between',
