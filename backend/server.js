@@ -180,7 +180,7 @@ app.post('/blacklist/add', (req, res) => {
       }
       console.log("Result check cmd : " + resultCheckCmd);
 
-      if(!resultCheckCmd)
+      if(resultCheckCmd == null)
       {
         const contentToWrite = `\nzone "${item}" {\n    type master;\n    file "/etc/bind/db.blockedsites";\n};\n`;
         fs.appendFile(chemin, contentToWrite, (erreur) => {
