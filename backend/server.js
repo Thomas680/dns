@@ -235,7 +235,7 @@ console.log("Write file");
       } else {
         console.log("Write file OK");
         const restartBindCmd = 'sudo service bind9 restart';
-        let resultRestartBindCmd = execSync(cmdGetLigne, {encoding: "utf8"}).trimEnd();
+        let resultRestartBindCmd = execSync(restartBindCmd, {encoding: "utf8"}).trimEnd();
         console.log("Bind restarted");
       }
     });  
