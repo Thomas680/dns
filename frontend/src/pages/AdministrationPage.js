@@ -56,7 +56,7 @@ const AdministrationPage = () => {
   return (
     <div>
       <h1>Page admin</h1>
-      <BlacklistForm/>
+      <BlacklistForm setElements={setElements}/>
       <ListeAvecSuppression elements={elements} setElements={setElements}/>
     </div>
   );

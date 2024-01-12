@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const IP_SERVER = "http://192.168.1.2:3001";
 
-const BlacklistForm = ({ onMettreAJourElements }) => {
+const BlacklistForm = (props) => {
 
   const [mode, setMode] = useState('manuel'); 
   const [texteManuel, setTexteManuel] = useState('');
@@ -35,6 +35,8 @@ const BlacklistForm = ({ onMettreAJourElements }) => {
         if (!response.ok) {
           console.error('Erreur lors de la requête vers le backend:', response.statusText);
         
+        } else {
+          props.setElements(donnees.contenu);
         }
       } catch (erreur) {
         console.error('Erreur lors de la requête:', erreur.message);
