@@ -13,50 +13,51 @@ const PORT =  3001;
 
 // Route qui permet d'initialiser le fichier de configuration db.blockedsites pour les blacklists
 app.get('/', (req, res) => {
-  const findCmd = 'sudo find /etc -name db.blockedsites';
-  const chemin = '/etc/bind/db.blockedsites';
+  res.send("OK").status(200);
+  // const findCmd = 'sudo find /etc -name db.blockedsites';
+  // const chemin = '/etc/bind/db.blockedsites';
 
-  exec(findCmd, (error, stdout, stderr) => {
+  // exec(findCmd, (error, stdout, stderr) => {
 
-    if (error) {
-      console.error(`Erreur de la commande find : ${error.message}`);
-    }
+  //   if (error) {
+  //     console.error(`Erreur de la commande find : ${error.message}`);
+  //   }
 
-    // Le fichier existe
-    if(stdout)
-    {
-      const contenuFichier = 
-      `$TTL 86400\n@       IN      SOA     localhost. root.localhost. (
-        \n                      1       ; Serial
-        \n                      604800  ; Refresh
-        \n                      86400   ; Retry
-        \n                      2419200 ; Expire
-        \n                      86400 ) ; Negative Cache TTL
+  //   // Le fichier existe
+  //   if(stdout)
+  //   {
+  //     const contenuFichier = 
+  //     `$TTL 86400\n@       IN      SOA     localhost. root.localhost. (
+  //       \n                      1       ; Serial
+  //       \n                      604800  ; Refresh
+  //       \n                      86400   ; Retry
+  //       \n                      2419200 ; Expire
+  //       \n                      86400 ) ; Negative Cache TTL
       
-        \n      IN      NS      localhost.
+  //       \n      IN      NS      localhost.
       
-      \n@      IN      A       127.0.0.1`;
+  //     \n@      IN      A       127.0.0.1`;
 
-      fs.writeFile(chemin, contenuFichier, (erreur) => {
-        if (erreur) {
-          console.error(`Erreur de la commande writeFile : `, erreur);
-        } else {
-          const restartCmd = 'sudo service bind9 restart';
-          exec(restartCmd, (error, stdout, stderr) => {
+  //     fs.writeFile(chemin, contenuFichier, (erreur) => {
+  //       if (erreur) {
+  //         console.error(`Erreur de la commande writeFile : `, erreur);
+  //       } else {
+  //         const restartCmd = 'sudo service bind9 restart';
+  //         exec(restartCmd, (error, stdout, stderr) => {
 
-            if (error) {
-              console.error(`Erreur lors du restart de bind : ${error.message}`);
-            }
+  //           if (error) {
+  //             console.error(`Erreur lors du restart de bind : ${error.message}`);
+  //           }
 
-            res.send("fichier de config db.blockedsites complété").status(200);
-          });
-        }
-      });  
-    }else{
-      res.send("fichier de config db.blockedsites n'existe pas").status(400);
-    }
+  //           res.send("fichier de config db.blockedsites complété").status(200);
+  //         });
+  //       }
+  //     });  
+  //   }else{
+  //     res.send("fichier de config db.blockedsites n'existe pas").status(400);
+  //   }
 
-  });
+  // });
 });
 
 
