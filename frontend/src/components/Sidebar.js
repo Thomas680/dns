@@ -8,7 +8,6 @@ const Sidebar = ({ onTabChange }) => {
       <BoutonOnOff/>
       <button onClick={() => onTabChange('home')}>Accueil</button>
       <button onClick={() => onTabChange('administration')}>Administration</button>
-      <button onClick={() => onTabChange('blacklist')}>blacklist</button>  
     </div>
   );
 };
