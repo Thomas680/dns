@@ -209,16 +209,28 @@ app.post('/blacklist/add', (req, res) => {
 // Route qui permet de supprimer une blacklist
 app.post('/blacklist/delete', (req, res) => {
 
+  try {
+
   const { contenu } = req.body;
 
   let cmdGetLigne = `grep -n ${contenu} /etc/bind/*.local` ;
   let resultCmdGetLigne = execSync(cmdGetLigne, {encoding: "utf8"}).trimEnd();
-  console.log(resultCmdGetLigne);
+  console.log("Résultat commande : " + resultCmdGetLigne);
 
-  const numeroLigne = resultCmdGetLigne.split(':')[1];
+  const numLigne = resultCmdGetLigne.split(':')[1];
+  console.log("Numéro de ligne : " + numLigne);
+  const numFin = parseInt(numLigne) +3;
+  console.log("Numéro de ligne de fin : " + numFin);
+
 
   const chemin = '/etc/bind/named.conf.local';
 
+
+  } 
+  catch(error)
+  {
+console.log(error);
+  }
   // exec(nombre, (error, stdout, stderr) => {
 
   //   if (error) {
