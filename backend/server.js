@@ -172,7 +172,12 @@ app.post('/blacklist/add', (req, res) => {
       const checkCmd = `grep ${item} /etc/bind/*.local`;
       //const checkCmd = `grep ${item} /etc/bind/named.conf.local`;
 
-      let resultCheckCmd = execSync(checkCmd, {encoding: "utf8"}).trimEnd();
+      let resultCheckCmd = null;
+      try {
+      resultCheckCmd = execSync(checkCmd, {encoding: "utf8"}).trimEnd();
+      } catch(err) {
+        console.log(item + " n'existe pas, il peut etre ajouté");
+      }
       console.log("Result check cmd : " + resultCheckCmd);
 
       if(!resultCheckCmd)
