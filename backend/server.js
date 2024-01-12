@@ -210,22 +210,35 @@ app.post('/blacklist/add', (req, res) => {
 app.post('/blacklist/delete', (req, res) => {
 
   try {
+    const { contenu } = req.body;
 
-  const { contenu } = req.body;
+    let cmdGetLigne = `grep -n ${contenu} /etc/bind/*.local` ;
+    let resultCmdGetLigne = execSync(cmdGetLigne, {encoding: "utf8"}).trimEnd();
+    console.log("Résultat commande : " + resultCmdGetLigne);
 
-  let cmdGetLigne = `grep -n ${contenu} /etc/bind/*.local` ;
-  let resultCmdGetLigne = execSync(cmdGetLigne, {encoding: "utf8"}).trimEnd();
-  console.log("Résultat commande : " + resultCmdGetLigne);
+    const numLigne = resultCmdGetLigne.split(':')[1];
+    console.log("Numéro de ligne : " + numLigne);
+    const numFin = parseInt(numLigne) +3;
+    console.log("Numéro de ligne de fin : " + numFin);
 
-  const numLigne = resultCmdGetLigne.split(':')[1];
-  console.log("Numéro de ligne : " + numLigne);
-  const numFin = parseInt(numLigne) +3;
-  console.log("Numéro de ligne de fin : " + numFin);
+    const cmdDelete = `sed '${numeroLigne},${numFin}d' /etc/bind/named.conf.local`;
+    let resultCmdDelete = execSync(cmdDelete, {encoding: "utf8"}).trimEnd();
+    console.log("Resultat delete : ");
+    console.log(resultCmdDelete);
 
+    const chemin = '/etc/bind/named.conf.local';
 
-  const chemin = '/etc/bind/named.conf.local';
-
-
+    fs.writeFile(chemin, resultCmdDelete, (erreur) => {
+console.log("Write file");
+      if (erreur) {
+        console.error('Erreur lors du write :', erreur);
+      } else {
+        console.log("Write file OK");
+        const restartBindCmd = 'sudo service bind9 restart';
+        let resultRestartBindCmd = execSync(cmdGetLigne, {encoding: "utf8"}).trimEnd();
+        console.log("Bind restarted");
+      }
+    });  
   } 
   catch(error)
   {
