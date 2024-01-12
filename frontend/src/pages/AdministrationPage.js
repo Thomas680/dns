@@ -2,8 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import BlacklistForm from '../components/FormAddBlacklist';
 import ListeAvecSuppression from '../components/Blacklist';
-
-const IP_SERVER = "http://192.168.1.2:3001";
+import { IP_SERVER } from '../constantes';
 
 const AdministrationPage = () => {
   /*

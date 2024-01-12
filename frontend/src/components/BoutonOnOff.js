@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const IP_SERVER = "http://192.168.1.2:3001";
+import { IP_SERVER } from '../constantes';
 
 const BoutonOnOff = () => {
   const [etatServeur, setEtatServeur] = useState();
