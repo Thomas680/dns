@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const IP_SERVER = "http://192.168.1.2:3001";
+
 const BoutonOnOff = () => {
   const [etatServeur, setEtatServeur] = useState();
 
@@ -7,7 +9,7 @@ const BoutonOnOff = () => {
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/etat');
+        const response = await fetch(IP_SERVER + '/etat');
         const data = await response.json();
         let res = false;
         if(data.status === 'active')
@@ -29,7 +31,7 @@ const BoutonOnOff = () => {
   const basculerEtatServeur = () => {
     setEtatServeur((prevEtat) => !prevEtat);
 
-    const url = etatServeur ? 'http://localhost:3001/stop-server' : 'http://localhost:3001/start-server';
+    const url = etatServeur ? IP_SERVER + '/stop-server' : IP_SERVER + '/start-server';
 
     fetch(url, {
       method: 'POST',

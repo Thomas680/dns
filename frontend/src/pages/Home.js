@@ -14,7 +14,7 @@ const Home = () => {
     // Fonction pour récupérer les données depuis l'API
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/blacklist/');
+        const response = await fetch(IP_SERVER + '/blacklist/');
         const data = await response.json();
       } catch (error) {
         console.error('Erreur lors de la récupération des données depuis l\'API:', error);

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+const IP_SERVER = "http://192.168.1.2:3001";
+
 const BlacklistForm = ({ onMettreAJourElements }) => {
 
   const [mode, setMode] = useState('manuel'); 
@@ -22,7 +24,7 @@ const BlacklistForm = ({ onMettreAJourElements }) => {
   const envoieBlacklist = async (donnees) => {
     try {
         //console.log(donnees);
-        const response = await fetch('http://localhost:3001/blacklist/add', {
+        const response = await fetch(IP_SERVER + '/blacklist/add', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

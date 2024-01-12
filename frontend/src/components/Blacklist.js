@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const IP_SERVER = "http://192.168.1.2:3001";
+
 const ListeAvecSuppression = () => {
   const [elements, setElements] = useState([]);
 
@@ -8,7 +10,7 @@ const ListeAvecSuppression = () => {
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/blacklist/');
+        const response = await fetch(IP_SERVER + '/blacklist/');
         const data = await response.json();
         setElements(data.nomsDeZones); 
       } catch (error) {
@@ -22,7 +24,7 @@ const ListeAvecSuppression = () => {
 
   const supprimerElement = async (element) => {
     try {
-      const response = await fetch('http://localhost:3001/blacklist/delete', {
+      const response = await fetch(IP_SERVER + '/blacklist/delete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
